@@ -13,7 +13,7 @@ if __name__ == "__main__" :
     
 
     # HARDCODE
-    vecCarreNoir  = g.Vecteur(250,250)
+    vecCarreNoir  = g.Vecteur(225,225)
     vecCarreBlanc = g.Vecteur(225,225)
     vecCarreRouge = g.Vecteur(225,225)
     vecRectangle1 = g.Vecteur(100,100)
@@ -23,13 +23,13 @@ if __name__ == "__main__" :
     
     
     
-    aireDeJeu = tk.Canvas(root, background="white", height="500", width="500") 
-    carreNoir = g.Carre(aireDeJeu,vecCarreNoir,500,0,remplissage="black",bordure="black")
-    carreBlanc = g.Carre(aireDeJeu,vecCarreBlanc,450,0,remplissage="white",bordure="white")
+    aireDeJeu = tk.Canvas(root, background="white", height="450", width="450") 
+    carreNoir = g.Carre(aireDeJeu,vecCarreNoir,450,0,remplissage="black",bordure="black")
+    carreBlanc = g.Carre(aireDeJeu,vecCarreBlanc,375,0,remplissage="white",bordure="white")
     carreRouge = g.Carre(aireDeJeu,vecCarreRouge,40,0,remplissage="red",bordure="red")
     rectangle1 = g.Rectangle(aireDeJeu,vecRectangle1,60,60,0,remplissage="blue",bordure="blue")
     rectangle2 = g.Rectangle(aireDeJeu,vecRectangle2,60,50,0,remplissage="blue",bordure="blue")
-    rectangle3 = g.Rectangle(aireDeJeu,vecRectangle3,30,600,0,remplissage="blue",bordure="blue")
+    rectangle3 = g.Rectangle(aireDeJeu,vecRectangle3,30,60,0,remplissage="blue",bordure="blue")
     rectangle4 = g.Rectangle(aireDeJeu,vecRectangle4,100,10,0,remplissage="blue",bordure="blue")
     
     aireDeJeu.grid()
@@ -37,6 +37,10 @@ if __name__ == "__main__" :
     carreBlanc.draw()
     carreRouge.draw()
     rectangle1.draw()
+    rectangle2.draw()
+    rectangle3.draw()
+    rectangle4.draw()
+    
 
 
     # Lancer la boucle principale
