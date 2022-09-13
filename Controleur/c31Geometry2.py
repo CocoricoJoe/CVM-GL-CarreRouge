@@ -2,6 +2,7 @@ import tkinter as tk
 import math
 # Permet d'encapsuler une fonction et ses paramètres
 from functools import partial, update_wrapper
+from xmlrpc.client import boolean
 
 class LoopEvent:
     """Cette classe permet de définir une action à exécuter
@@ -398,6 +399,8 @@ class Polygone:
         self.remplissage = remplissage
         self.bordure = bordure
         self.epaisseur = epaisseur
+        self.sensX = 1
+        self.sensY = 1
         
     def get_coordonnees(self):
         """Récupère un tableau des coordonnées de tous les points
