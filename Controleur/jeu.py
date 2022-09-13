@@ -25,7 +25,7 @@ if __name__ == "__main__" :
     
     aireDeJeu = tk.Canvas(root, background="white", height="450", width="450") 
     carreNoir = g.Carre(aireDeJeu,vecCarreNoir,450,0,remplissage="black",bordure="black")
-    carreBlanc = g.Carre(aireDeJeu,vecCarreBlanc,375,0,remplissage="white",bordure="white")
+    carreBlanc = g.Carre(aireDeJeu,vecCarreBlanc,350,0,remplissage="white",bordure="white")
     carreRouge = g.Carre(aireDeJeu,vecCarreRouge,40,0,remplissage="red",bordure="red")
     rectangle1 = g.Rectangle(aireDeJeu,vecRectangle1,60,60,0,remplissage="blue",bordure="blue")
     rectangle2 = g.Rectangle(aireDeJeu,vecRectangle2,60,50,0,remplissage="blue",bordure="blue")
