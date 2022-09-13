@@ -25,8 +25,8 @@ def EcrireScore(array):
    filePath = "C:/travail/CVM-GL-CarreRouge/Controleur/stats.csv" 
    file = open(filePath)
    writer = csv.writer(file)    
-   for item in array:
-        writer.writerow([item.nom,item.pointage])
+   for partie in array:
+        writer.writerow(partie.nom)
 
 def NouvellePartie():
     
