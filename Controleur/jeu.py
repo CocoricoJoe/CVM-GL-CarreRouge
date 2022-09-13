@@ -22,10 +22,11 @@ def LireScore():
 
 def EcrireScore(array):
     
-   f = open("C:/travail/CVM-GL-CarreRouge/Controleur/stats.csv")
-   writer = csv.writer(f)    
+   filePath = "C:/travail/CVM-GL-CarreRouge/Controleur/stats.csv" 
+   file = open(filePath)
+   writer = csv.writer(file)    
    for item in array:
-    writer.writerow([item.nom,item.pointage])
+        writer.writerow([item.nom,item.pointage])
 
 def NouvellePartie():
     
