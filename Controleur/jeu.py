@@ -53,7 +53,7 @@ if __name__ == "__main__" :
         colli = ''
         
         for point in rectangle.get_coordonnees():
-            if point[0] <= 0 or point[0] >= 459:
+            if point[0] <= 0 or point[0] >= 449:
                 colli = 'X'
             if point[1] <= 0 or point[1] >= 450:
                 colli = 'Y'
