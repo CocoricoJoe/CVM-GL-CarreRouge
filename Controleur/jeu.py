@@ -1,6 +1,8 @@
 from msilib.schema import Class
+from turtle import update
 import c31Geometry2 as g
 import tkinter as tk
+import time
 from datetime import date
 import csv
 from functools import partial
@@ -8,7 +10,7 @@ import partie as p
 
 def LireScore(root): 
 
-    filePath = "X:/GL/CVM-GL-CarreRougeDEV/Controleur/stats.csv"
+    filePath = "stats.csv"
     file = open(filePath) 
     reader = csv.reader(file)
     Data = list(reader)
@@ -20,21 +22,21 @@ def LireScore(root):
     listbox.grid(column=0,row=0)
 
 def EffacerScore():
-    filePath = "X:/GL/CVM-GL-CarreRougeDEV/Controleur/stats.csv"
+    filePath = "stats.csv"
     file = open(filePath, "w" )
     file.truncate()
     file.close()
 
 def EcrireScore(array):
     
-   filePath = "X:/GL/CVM-GL-CarreRougeDEV/Controleur/stats.csv" 
+   filePath = "stats.csv" 
    file = open(filePath, "w")
    writer = csv.writer(file)    
    for item in array:
-        writer.writerow(item.nom)
+        writer.writerow([item.nom,item.pointage,item.dateJeu])
 
 class Jeu:
-     
+    root = 0 
     vecCarreNoir = 0
     vecCarreBlanc = 0
     vecCarreRouge = 0
@@ -42,6 +44,11 @@ class Jeu:
     vecRectangle2  = 0
     vecRectangle3 = 0
     vecRectangle4 = 0
+    hautCarreBlanc = 0                  
+    gaucheCarreBlanc = 0                      
+    basCarreBlanc = 0                    
+    droiteCarreBlanc = 0   
+    coinsCarreBlanc = []   
     velocite = 0
     aireDeJeu = 0
     carreNoir = 0
@@ -54,16 +61,20 @@ class Jeu:
     rectangle4 = 0
     rectangles = 0
     boutonNouvellePartie = 0
+    labelFinDePartie = 0
     boutonNouvelleSession = 0
     boutonAfficherScore = 0
     boutonEffacerScore = 0
     nomJoueur = 0
     champNom = 0
-    scoreSession = 0
+    tempsDebut = 0
+    tempsFin = 0
+    tempsTotal = 0
+    scoreSession = []
     partie = 0
     
     def NouvellePartie(self,root,array):
-        
+        self.root = root
         self.vecCarreNoir  = g.Vecteur(225,225)
         self.vecCarreBlanc = g.Vecteur(225,225)
         self.vecCarreRouge = g.Vecteur(225,225)
@@ -71,6 +82,11 @@ class Jeu:
         self.vecRectangle2 = g.Vecteur(300,85)
         self.vecRectangle3 = g.Vecteur(85,300)
         self.vecRectangle4 = g.Vecteur(355,340)
+        self.hautCarreBlanc = g.Vecteur(225,50)                    
+        self.gaucheCarreBlanc = g.Vecteur(50,225)                    
+        self.basCarreBlanc = g.Vecteur(225,400)                    
+        self.droiteCarreBlanc = g.Vecteur(400,225)
+        self.coinsCarreBlanc = [self.hautCarreBlanc, self.gaucheCarreBlanc, self.basCarreBlanc, self.droiteCarreBlanc]
         
         self.velocite = 1
         
@@ -84,6 +100,7 @@ class Jeu:
         self.rectangle4 = g.Rectangle(self.aireDeJeu,self.vecRectangle4,100,10,0,remplissage="blue",bordure="blue")
         self.rectangles = [self.rectangle1,self.rectangle2,self.rectangle3,self.rectangle4]
         self.boutonNouvellePartie = tk.Button(root, text = "Nouvelle partie", command=partial(self.NouvellePartie,root,array))
+        self.labelFinDePartie = tk.Label(root, text="Vous avez perdu, cliquez sur Nouvelle Partie pour recommencer", padx=20, pady=20)
         self.boutonNouvelleSession = tk.Button(root, text = "Nouvelle session", command=partial(self.NouvelleSession,root))
         self.boutonAfficherScore = tk.Button(root, text = "Afficher les scores", command=partial(LireScore,root))
         self.boutonEffacerScore = tk.Button(root,text = "Effacer les scores", command=partial(EffacerScore))
@@ -104,6 +121,31 @@ class Jeu:
         self.rectangle2.draw()
         self.rectangle3.draw()
         self.rectangle4.draw()
+        
+    def clicCarreRouge (self, e, root):
+        x = e.x
+        y = e.y
+        if (x >= 205 and y >=205) and (x <= 245 and y <= 245):
+            self.debutPartie(root)
+    
+    def debutPartie(self, root):
+        self.tempsDebut = time.time()
+        loopRectangles = g.LoopEvent(root, self.deplacementRectangles, 30)
+        loopRectangles.startImmediately()
+        root.bind('<B1-Motion>', lambda e : self.deplacementCarreRouge(e, root))
+        
+    def finDePartie(self, root):
+        root.unbind("<Motion>")
+        self.tempsFin = time.time()
+        self.aireDeJeu.destroy()
+        
+        self.tempsTotal = self.tempsFin - self.tempsDebut
+        self.partie = p.Partie(self.tempsTotal, self.champNom.get())
+        self.scoreSession.append(self.partie)
+        EcrireScore(self.scoreSession) 
+    
+        self.labelFinDePartie.grid(column=0, row=0) 
+        
         
     def NouvelleSession(self,root):
         
@@ -128,6 +170,7 @@ class Jeu:
             colli = 'Y'
         if gaucheRectangle <= 0 or droiteRectangle >= 449:
             colli = 'X'
+            self.velocite += 0.05
         
         return colli
 
@@ -138,9 +181,14 @@ class Jeu:
         
         for rectangle in self.rectangles:
             for point in rectangle.get_coordonnees():
-                if (g.Vecteur(point[0],point[1]).distance(centreCarre) <= 20):
-                    self.carreRouge.set_remplissage("black")  
-                    collision = True  
+                if (g.Vecteur(point[0],point[1]).distance(centreCarre) <= 20):                      
+                    collision = True
+                    break
+        
+        for coin in self.coinsCarreBlanc:
+            if (coin.distance(centreCarre) <= 20):
+                collision = True
+                break   
                                         
         return collision
 
@@ -160,19 +208,33 @@ class Jeu:
             rectangle.draw()   
             
 
-    def deplacementCarreRouge(self, e):
-        x= e.x
-        y= e.y
-        nouvellePosition = g.Vecteur(x,y) - self.carreRouge.get_barycentre()
-        self.carreRouge.translate(nouvellePosition)    
+    # def deplacementCarreRouge(self, e, root):
+    #     x= e.x
+    #     y= e.y
+    #     nouvellePosition = g.Vecteur(x,y) - self.carreRouge.get_barycentre()
+    #     self.carreRouge.translate(nouvellePosition)    
+            
+    #     if self.collisionCarre():
+    #         root.unbind("<Motion>")
+    #         self.tempsFin = time.time()            
+    #         self.etatCarre = "Mort"
+            
+    #         self.tempsTotal = self.tempsFin - self.tempsDebut
+    #         self.partie = p.Partie(self.tempsTotal, self.champNom.get())
+    #         self.scoreSession.append(self.partie)
+    #         EcrireScore(self.scoreSession)
+    #         self.aireDeJeu.destroy()
+    #         self.labelFinDePartie.grid(column=0, row=0)
+    #     else:                       
+    #         self.carreRouge.draw()
+    
+    def deplacementCarreRouge(self, e, root):         
             
         if self.collisionCarre():
-            self.etatCarre = "Mort"
-        
-        print(self.etatCarre)            
-        self.carreRouge.draw()
-            
-            
-    # Actualiser le jeu
-    def update(self):
-            self.deplacementRectangles()
+            self.finDePartie(root)
+        else:
+            x= e.x
+            y= e.y
+            nouvellePosition = g.Vecteur(x,y) - self.carreRouge.get_barycentre()
+            self.carreRouge.translate(nouvellePosition)                         
+            self.carreRouge.draw()         

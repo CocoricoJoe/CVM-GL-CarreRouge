@@ -10,7 +10,3 @@ class Partie:
         self.pointage = score
         self.nom = nom
         self.dateJeu = date.today()
-        
-
-
-    

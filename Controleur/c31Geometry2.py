@@ -632,6 +632,8 @@ class Rectangle(Polygone):
         
         demi_largeur = largeur / 2
         demi_hauteur = hauteur / 2
+        self.sensX = 1
+        self.sensY = 1
         
         # Coin haut gauche
         self._vertex.append(

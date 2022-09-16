@@ -1,3 +1,4 @@
+from multiprocessing.dummy import Event
 from jeu import Jeu
 import c31Geometry2 as geometry
 import tkinter as tk
@@ -11,7 +12,8 @@ if __name__ == "__main__" :
     root.geometry("450x600")
 
     jeu.NouvelleSession(root)
-    print(jeu.partie.nom)
+    #print(jeu.partie.nom)
     
-    root.bind('<Motion>', jeu.deplacementCarreRouge)
+    root.bind('<ButtonPress-1>', lambda e : jeu.clicCarreRouge(e, root))
+    
     root.mainloop()
