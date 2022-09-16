@@ -28,7 +28,7 @@ def EcrireScore(array):
    for partie in array:
         writer.writerow(partie.nom)
 
-def NouvellePartie():
+def NouvellePartie(root):
     
     vecCarreNoir  = g.Vecteur(225,225)
     vecCarreBlanc = g.Vecteur(225,225)
@@ -88,19 +88,5 @@ class Partie:
     
 
 
-if __name__ == "__main__" :
 
-    
-    root = tk.Tk()
-    root.title("Jeu.py")
-    root.geometry("450x600")
-
-    NouvellePartie()
-    
-    
-    
-    root.mainloop()   
-    
-   
-        
     
